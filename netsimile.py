@@ -5,6 +5,17 @@ Created on Thu Nov 14 13:53:46 2013
 """
 import scipy.stats as st
 
+# import local config
+DATA_URL=""
+SAVE_URL=""
+try:
+    from dev_settings import *
+except:
+    pass
+
+#==============================================================================
+# Define the 7 feature functions
+#==============================================================================
 def get_di(node, graph):
     pass
 
@@ -26,6 +37,9 @@ def get_eoegoi(node, graph):
 def get_negoi(node, graph):
     pass
 
+#==============================================================================
+# NetSimile Algorithm
+#==============================================================================
 def get_nodes(graph):
     pass
     
