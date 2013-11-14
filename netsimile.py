@@ -1,34 +1,33 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu Nov 14 13:53:46 2013
-
 @author: Sagar Jauhari
 """
 import scipy.stats as st
 
 def get_di(node, graph):
-    return
+    pass
 
 def get_ci(node, graph):
-    return
+    pass
 
 def get_dni(node, graph):
-    return
+    pass
 
 def get_cni(node, graph):
-    return
+    pass
 
 def get_eegoi(node, graph):
-    return
+    pass
 
 def get_eoegoi(node, graph):
-    return
+    pass
 
 def get_negoi(node, graph):
-    return
+    pass
 
 def get_nodes(graph):
-    return
+    pass
     
 def get_features(g):
     v = get_nodes(g)
@@ -46,9 +45,11 @@ def get_features_all(graphs):
 def get_moments(feat):
     """
     input: feature matrix of a single graph
+    output: for each feature, return the 5 moments
     """
     feat_cols = zip(*feat)
     assert (len(feat_cols)==7),"Total columns != 7"
+    assert (len(feat_cols[0])==5),"Total moments !=5"
     
     return [(mean(f),
              median(f),
@@ -58,6 +59,13 @@ def get_moments(feat):
 
 def aggregator(features_all):
     return [get_moments(feat) for feat in features_all]
+
+def compare(sigs):
+    """
+    input: 7x5 signature matrices for each graph
+    output: pairwise comparison of each graph on the basis of signatures
+    """
+    pass
 
 def NetSimile(graphs):
     features_all = get_features_all(graphs)#features of all nodes in all graphs
