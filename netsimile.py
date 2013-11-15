@@ -4,8 +4,12 @@ Created on Thu Nov 14 13:53:46 2013
 @author: Sagar Jauhari
 """
 import scipy.stats as st
+import sys
+from os import listdir
+from os.path import isfile, join
+import igraph
 
-# import local config
+# import local config: Set you local paths in dev_settings.py
 DATA_URL=""
 SAVE_URL=""
 try:
@@ -87,3 +91,13 @@ def NetSimile(graphs):
     compare(signatures)
     return
     
+#==============================================================================
+# Main
+# Command line parameter: name-of-dataset
+# Example Usage:$ python netsimile.py "reality_mining_voices"
+#==============================================================================
+if __name__=="__main__":
+    dir_path = join(DATA_URL, sys.argv[1])
+    onlyfiles = [f for f in listdir(dir_path) if \
+                            isfile(join(dir_path,f)) ]
+    print onlyfiles
