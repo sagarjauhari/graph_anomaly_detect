@@ -21,28 +21,28 @@ except:
 # Define the 7 feature functions and their helper functions
 #==============================================================================
 def get_egonet(node, graph):
-    pass
+    return 1
 
 def get_di(node, graph):
-    pass
+    return 2
 
 def get_ci(node, graph):
-    pass
+    return 3
 
 def get_dni(node, graph):
-    pass
+    return 4
 
 def get_cni(node, graph):
-    pass
+    return 5
 
 def get_eegoi(node, graph):
-    pass
+    return 6
 
 def get_eoegoi(node, graph):
-    pass
+    return 7
 
 def get_negoi(node, graph):
-    pass
+    return 8
 
 #==============================================================================
 # NetSimile Algorithm
@@ -51,17 +51,16 @@ def get_nodes(graph):
     pass
     
 def get_features(g):
-    v = get_nodes(g)
     return [(get_di(i,g), 
              get_ci(i,g), 
              get_dni(i,g),
              get_cni(i,g),
              get_eegoi(i,g),
              get_eoegoi(i,g),
-             get_negoi(i,g)) for i in v]
+             get_negoi(i,g)) for i in g.vs]
 
 def get_features_all(graphs):
-    return [get_features(g) for g in graphs]
+    return {g: get_features(graphs[g]) for g in graphs}
 
 def get_moments(feat):
     """
@@ -70,8 +69,7 @@ def get_moments(feat):
     """
     feat_cols = zip(*feat)
     assert (len(feat_cols)==7),"Total columns != 7"
-    assert (len(feat_cols[0])==5),"Total moments !=5"
-    
+   
     return [(mean(f),
              median(f),
              std(f),
@@ -79,14 +77,17 @@ def get_moments(feat):
              st.kurtosis(f)) for f in feat_cols]
 
 def aggregator(features_all):
-    return [get_moments(feat) for feat in features_all]
+    return {g: get_moments(features_all[g]) for g in features_all}
 
 def compare(sigs):
     """
     input: 7x5 signature matrices for each graph
     output: pairwise comparison of each graph on the basis of signatures
     """
-    pass
+    for g in sigs:
+        assert (len(sigs[g])==7),"Total features != 7"
+        assert (len(sigs[g][0])==5),"Total moments != 5"
+        print "Signature of "+g, sigs[g]
 
 def file2igraph(file):
     """
@@ -104,15 +105,15 @@ def file2igraph(file):
             
 
 def NetSimile(graph_files, dir_path):
-    # Dict of graphs
+    #dict of graphs
     graphs = {f: file2igraph(join(dir_path, f)) for f in graph_files}
 
     #features of all nodes in all graphs
+    #format: {g1:[(f1..f7),(f1..f7),(f1..f7)...#nodes], g2:...}
     features_all = get_features_all(graphs)
     
     #signature of all graphs
     signatures = aggregator(features_all)
-    
     
     compare(signatures)
     return
