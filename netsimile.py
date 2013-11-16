@@ -7,7 +7,7 @@ import scipy.stats as st
 import sys
 from os import listdir
 from os.path import isfile, join
-import igraph
+from igraph import *
 
 # import local config: Set you local paths in dev_settings.py
 DATA_URL=""
@@ -18,8 +18,11 @@ except:
     pass
 
 #==============================================================================
-# Define the 7 feature functions
+# Define the 7 feature functions and their helper functions
 #==============================================================================
+def get_egonet(node, graph):
+    pass
+
 def get_di(node, graph):
     pass
 
@@ -85,9 +88,26 @@ def compare(sigs):
     """
     pass
 
-def NetSimile(graphs):
-    features_all = get_features_all(graphs)#features of all nodes in all graphs
-    signatures = aggregator(features_all)  #signature of all graphs
+def file2igraph(file):
+    with open(file, 'r') as fi:
+        v,e = fi.next().split()
+        e_list = [(int(i.split()[0]), int(i.split()[1])) for i in list(fi)]
+        assert (int(e) == len(e_list)),\
+                    "#edges mentioned and # of edges in file differ"
+        g = Graph()
+        g.add_vertices(int(v))
+        g.add_edges(e_list)
+        return g
+            
+
+def NetSimile(graph_files, dir_path):
+    #features of all nodes in all graphs
+    features_all = get_features_all(graph)
+    
+    #signature of all graphs
+    signatures = aggregator(features_all)
+    
+    
     compare(signatures)
     return
     
@@ -100,4 +120,4 @@ if __name__=="__main__":
     dir_path = join(DATA_URL, sys.argv[1])
     onlyfiles = [f for f in listdir(dir_path) if \
                             isfile(join(dir_path,f)) ]
-    print onlyfiles
+    NetSimile(onlyfiles, dir_path)
