@@ -18,13 +18,18 @@ except:
     pass
 
 #==============================================================================
-# Define the 7 feature functions and their helper functions
+# 7 feature functions and their helper functions
+# Page 2: Berlingerio, Michele, et al. "NetSimile: a scalable approach to
+# size-independent network similarity." arXiv preprint arXiv:1209.2684 (2012).
 #==============================================================================
 def get_egonet(node, graph):
     return 1
 
 def get_di(node, graph):
-    return 2
+    """
+    Number of neigbors
+    """
+    return graph.neighborhood_size(node)
 
 def get_ci(node, graph):
     return 3
@@ -45,11 +50,8 @@ def get_negoi(node, graph):
     return 8
 
 #==============================================================================
-# NetSimile Algorithm
+# NetSimile Algorithm components
 #==============================================================================
-def get_nodes(graph):
-    pass
-    
 def get_features(g):
     return [(get_di(i,g), 
              get_ci(i,g), 
@@ -91,7 +93,7 @@ def compare(sigs):
 
 def file2igraph(file):
     """
-    Covert graph file into iGraph object, add artifacts
+    Coverts graph file into iGraph object, adds artifacts
     """
     with open(file, 'r') as fi:
         v,e = fi.next().split()
@@ -103,7 +105,9 @@ def file2igraph(file):
         g.add_edges(e_list)
         return g
             
-
+#==============================================================================
+# NetSimile algorithm
+#==============================================================================
 def NetSimile(graph_files, dir_path):
     #dict of graphs
     graphs = {f: file2igraph(join(dir_path, f)) for f in graph_files}
