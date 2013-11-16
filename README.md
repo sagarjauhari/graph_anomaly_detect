@@ -12,4 +12,6 @@ SAVE_URL="<path to your output folder>"
 </pre>
 
 The path mentioned in 'DATA_URL' should contain all the unzipped data in 4 folders: 
-  as-733  enron  p2p-Gnutella  reality_mining_voices
+<pre>
+as-733  enron  p2p-Gnutella  reality_mining_voices
+<pre>
