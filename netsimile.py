@@ -89,6 +89,9 @@ def compare(sigs):
     pass
 
 def file2igraph(file):
+    """
+    Covert graph file into iGraph object, add artifacts
+    """
     with open(file, 'r') as fi:
         v,e = fi.next().split()
         e_list = [(int(i.split()[0]), int(i.split()[1])) for i in list(fi)]
@@ -101,8 +104,11 @@ def file2igraph(file):
             
 
 def NetSimile(graph_files, dir_path):
+    # Dict of graphs
+    graphs = {f: file2igraph(join(dir_path, f)) for f in graph_files}
+
     #features of all nodes in all graphs
-    features_all = get_features_all(graph)
+    features_all = get_features_all(graphs)
     
     #signature of all graphs
     signatures = aggregator(features_all)
