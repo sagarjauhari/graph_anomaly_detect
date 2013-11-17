@@ -8,6 +8,7 @@ import sys
 from os import listdir
 from os.path import isfile, join
 from igraph import *
+import scipy.spatial.distance
 
 # import local config: Set you local paths in dev_settings.py
 DATA_URL=""
@@ -93,12 +94,16 @@ def get_moments(feat):
     """
     feat_cols = zip(*feat)
     assert (len(feat_cols)==7),"Total columns != 7"
-   
-    return [(mean(f),
+    
+    signature = []
+    # Calculate the 5 aggregates for each feature
+    for f in feat_cols:
+        signature = signature + [mean(f),
              median(f),
              std(f),
              st.skew(f),
-             st.kurtosis(f)) for f in feat_cols]
+             st.kurtosis(f)]
+    return signature
 
 def aggregator(features_all):
     return {g: get_moments(features_all[g]) for g in features_all}
@@ -106,7 +111,10 @@ def aggregator(features_all):
 def canberra_dist(sig1, sig2):
     """
     TODO: Define function
+    Returns the Canberra distance between graphs described by the signatures
+    sig1 and sig2.
     """
+    return scipy.spatial.distance.cdist
     pass
 
 def compare(sigs):
@@ -126,8 +134,7 @@ def compare(sigs):
     
     # Verify dimensions
     for g in sigs:
-        assert (len(sigs[g])==7),"Total features != 7"
-        assert (len(sigs[g][0])==5),"Total moments != 5"
+        assert (len(sigs[g])==7*5),"Total features != 7"
     
     # Calculate Canberra distance threshold
     
