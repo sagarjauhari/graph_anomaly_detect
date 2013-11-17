@@ -9,6 +9,7 @@ from os import listdir
 from os.path import isfile, join
 from igraph import *
 import scipy.spatial.distance
+import matplotlib.pyplot as plt
 
 # import local config: Set you local paths in dev_settings.py
 DATA_URL=""
@@ -133,12 +134,21 @@ def compare(sigs):
     # Verify dimensions
     for g in sigs:
         assert (len(sigs[g])==7*5),"Total features != 7"
-        print sigs[g]
     
     # Calculate Canberra distance threshold
     
     # Order all the graphs names based on the timestamp
+    ordered_graphs = sorted(sigs.keys(), key=lambda k:int(k.split('_',1)[0]))
+    dists = [canberra_dist(sigs[ordered_graphs[i]],
+                            sigs[ordered_graphs[i-1]])\
+                            for i in range(1,len(ordered_graphs))]
     
+    # Plot the (N-1) canberra distances comparing each graph with the 
+    # previous one
+    fig, ax = plt.subplots()
+    ax.plot(dists)
+    plt.grid(True)
+        
     anomalies = []
     # Starting with the 2nd graph, compute the canberra distance of each
     # graph with the previous one. Compare with threshold value. Append
