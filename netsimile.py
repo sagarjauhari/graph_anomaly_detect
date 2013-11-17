@@ -110,12 +110,10 @@ def aggregator(features_all):
 
 def canberra_dist(sig1, sig2):
     """
-    TODO: Define function
     Returns the Canberra distance between graphs described by the signatures
     sig1 and sig2.
     """
-    return scipy.spatial.distance.cdist
-    pass
+    return scipy.spatial.distance.canberra(sig1, sig2)
 
 def compare(sigs):
     """
@@ -135,6 +133,7 @@ def compare(sigs):
     # Verify dimensions
     for g in sigs:
         assert (len(sigs[g])==7*5),"Total features != 7"
+        print sigs[g]
     
     # Calculate Canberra distance threshold
     
