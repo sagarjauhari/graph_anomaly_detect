@@ -63,19 +63,19 @@ def get_eegoi(node, graph):
     """
     TODO: Define function
     """
-    return 6
+    return 0
 
 def get_eoegoi(node, graph):
     """
     TODO: Define function
     """
-    return 7
+    return 0
 
 def get_negoi(node, graph):
     """
     TODO: Define function
     """
-    return 8
+    return 0
 
 #==============================================================================
 # NetSimile Algorithm components
