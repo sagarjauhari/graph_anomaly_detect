@@ -40,9 +40,10 @@ def get_di(node, graph):
 
 def get_ci(node, graph):
     """
-    TODO: Define function
+    Clustering coefficient of node, defined as the number of triangles
+    connected to node over the number of connected triples centered on node
     """
-    return 3
+    return graph.transitivity_local_undirected(node, mode="zero")
 
 def get_dni(node, graph):
     """
@@ -53,9 +54,10 @@ def get_dni(node, graph):
 
 def get_cni(node, graph):
     """
-    TODO: Define function
+    Average clustering coefficient of neighbors of node
     """
-    return 5
+    return mean([get_ci(n, graph) for n in get_egonet(node, graph) \
+                                  if n != node])
 
 def get_eegoi(node, graph):
     """
