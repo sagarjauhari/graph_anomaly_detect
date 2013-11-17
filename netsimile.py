@@ -3,6 +3,7 @@
 Created on Thu Nov 14 13:53:46 2013
 @author: Sagar Jauhari
 """
+
 import scipy.stats as st
 import sys
 from os import listdir
@@ -45,9 +46,10 @@ def get_ci(node, graph):
 
 def get_dni(node, graph):
     """
-    TODO: Define function
+    Average number of node’s two-hop away neighbors
     """
-    return 4
+    return mean([get_di(n, graph) for n in get_egonet(node, graph) \
+                                  if n != node])
 
 def get_cni(node, graph):
     """
@@ -96,8 +98,8 @@ def get_moments(feat):
     feat_cols = zip(*feat)
     assert (len(feat_cols)==7),"Total columns != 7"
     
-    signature = []
     # Calculate the 5 aggregates for each feature
+    signature = []
     for f in feat_cols:
         signature = signature + [mean(f),
              median(f),
@@ -133,7 +135,7 @@ def compare(sigs):
     
     # Verify dimensions
     for g in sigs:
-        assert (len(sigs[g])==7*5),"Total features != 7"
+        assert (len(sigs[g])==7*5),"Total features != 7*5"
     
     # Calculate Canberra distance threshold
     
@@ -175,8 +177,8 @@ def NetSimile(graph_files, dir_path):
     #dict of graphs
     graphs = {f: file2igraph(join(dir_path, f)) for f in graph_files}
 
-    #features of all nodes in all graphs
-    #format: {g1:[(f1..f7),(f1..f7),(f1..f7)...#nodes], g2:...}
+    # Get features of all nodes in all graphs
+    # Format: {g1:[(f1..f7),(f1..f7),(f1..f7)...#nodes], g2:...}
     features_all = get_features_all(graphs)
     
     #signature of all graphs
