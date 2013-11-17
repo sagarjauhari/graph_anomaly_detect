@@ -23,7 +23,11 @@ except:
 # size-independent network similarity." arXiv preprint arXiv:1209.2684 (2012).
 #==============================================================================
 def get_egonet(node, graph):
-    return 1
+    """
+    A node’s egonet is the induced subgraph formed by the node and its
+    neighbors. Returns list of vertices that belong to the egonet
+    """
+    return graph.neighborhood(node)
 
 def get_di(node, graph):
     """
@@ -32,21 +36,39 @@ def get_di(node, graph):
     return graph.neighborhood_size(node)
 
 def get_ci(node, graph):
+    """
+    TODO: Define function
+    """
     return 3
 
 def get_dni(node, graph):
+    """
+    TODO: Define function
+    """
     return 4
 
 def get_cni(node, graph):
+    """
+    TODO: Define function
+    """
     return 5
 
 def get_eegoi(node, graph):
+    """
+    TODO: Define function
+    """
     return 6
 
 def get_eoegoi(node, graph):
+    """
+    TODO: Define function
+    """
     return 7
 
 def get_negoi(node, graph):
+    """
+    TODO: Define function
+    """
     return 8
 
 #==============================================================================
@@ -81,15 +103,40 @@ def get_moments(feat):
 def aggregator(features_all):
     return {g: get_moments(features_all[g]) for g in features_all}
 
+def canberra_dist(sig1, sig2):
+    """
+    TODO: Define function
+    """
+    pass
+
 def compare(sigs):
     """
+    TODO: Define function
+    To detect anomalies, compute the Canberra distance between consecutive time
+    points (i.e.,between graphs G t and G t+1 ). You should calculate the 
+    threshold value for the Canberra distance as explained in the project 
+    description. Use the upper threshold to identify anomalies (i.e., two 
+    consecutive time points above the threshold). For example, if both d(G1 , 
+    G 2 ) and d(G 2 , G 3 ) are found to be above the threshold, then graph G2 
+    is an anomalous graph, since it is different to the preceding and 
+    succeeding graphs.
     input: 7x5 signature matrices for each graph
-    output: pairwise comparison of each graph on the basis of signatures
+    output: Time series comparison of each graph on the basis of signatures
     """
+    
+    # Verify dimensions
     for g in sigs:
         assert (len(sigs[g])==7),"Total features != 7"
         assert (len(sigs[g][0])==5),"Total moments != 5"
-        print "Signature of "+g, sigs[g]
+    
+    # Calculate Canberra distance threshold
+    
+    # Order all the graphs names based on the timestamp
+    
+    anomalies = []
+    # Starting with the 2nd graph, compute the canberra distance of each
+    # graph with the previous one. Compare with threshold value. Append
+    # the anomalous grpahs to list anomalies[]
 
 def file2igraph(file):
     """
