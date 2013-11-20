@@ -1,7 +1,4 @@
-graph_anomaly_detect
-====================
-
-Anomaly detection in time series graphs
+##Anomaly detection in time evolving graphs
 
 
 ### Local Configuration
