@@ -71,18 +71,25 @@ def get_eoegoi(node, graph):
     """
     Number of outgoing edges from node's egonet
     """
-    sub_g_inv = graph.copy() #clone the graph
-    sub_g_inv.delete_vertices(get_egonet(node, graph)) #delete egonet
+    #clone the graph and delete egonet subgraph
+    sub_g_inv = graph.copy()
+    sub_g_inv.delete_vertices(get_egonet(node, graph))
+    
     return len(list(graph.es())) \
             - len(list(sub_g_inv.es())) \
             - get_eegoi(node, graph)
 
 def get_negoi(node, graph):
     """
-    TODO: Define function
     Number of neighbors of node's egonet
     """
-    return 0
+    vertices = get_egonet(node, graph)
+    all_neighbors = []
+    for v in vertices:
+        all_neighbors = all_neighbors + get_egonet(v,graph)
+    all_neighbors = set(all_neighbors)
+    all_neighbors =  [i for i in all_neighbors if i not in vertices]
+    return(len(all_neighbors))
 
 #==============================================================================
 # NetSimile Algorithm components
