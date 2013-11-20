@@ -11,14 +11,16 @@ from os.path import isfile, join
 from igraph import *
 import scipy.spatial.distance
 import matplotlib.pyplot as plt
+from utils import *
 
-# import local config: Set you local paths in dev_settings.py
+# import local config: Set your local paths in dev_settings.py
 DATA_URL=""
 SAVE_URL=""
 try:
     from dev_settings import *
 except:
     pass
+
 
 #==============================================================================
 # 7 feature functions and their helper functions
@@ -95,7 +97,7 @@ def get_negoi(node, graph):
 # NetSimile Algorithm components
 #==============================================================================
 def get_features(g, name):
-    print "Generating features: %s" % name 
+    print "Extracting features: %s" % name 
     return [(get_di(i,g), 
              get_ci(i,g), 
              get_dni(i,g),
@@ -175,21 +177,7 @@ def compare(sigs):
     # Starting with the 2nd graph, compute the canberra distance of each
     # graph with the previous one. Compare with threshold value. Append
     # the anomalous grpahs to list anomalies[]
-
-def file2igraph(file):
-    """
-    Converts graph file into iGraph object, adds artifacts
-    """
-    with open(file, 'r') as fi:
-        v,e = fi.next().split()
-        e_list = [(int(i.split()[0]), int(i.split()[1])) for i in list(fi)]
-        assert (int(e) == len(e_list)),\
-                    "#edges mentioned and # of edges in file differ"
-        g = Graph()
-        g.add_vertices(int(v))
-        g.add_edges(e_list)
-        return g
-            
+        
 #==============================================================================
 # NetSimile algorithm
 #==============================================================================
@@ -206,7 +194,7 @@ def NetSimile(graph_files, dir_path):
     
     compare(signatures)
     return
-    
+
 #==============================================================================
 # Main
 # Command line parameter: name-of-dataset
