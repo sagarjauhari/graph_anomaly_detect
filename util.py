@@ -32,4 +32,9 @@ def saveDists(graph_names, dists, file_name):
     with open(join("out",file_name), 'w') as fo:
         fr = csv.writer(fo)
         fr.writerows(data)
-        
+
+def saveAnomalies(lim_up, lim_down, dists, anomalies):
+    """
+    Writes to disk the anomalies in the defined format. 
+    """
+    pass
