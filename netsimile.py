@@ -61,19 +61,26 @@ def get_cni(node, graph):
 
 def get_eegoi(node, graph):
     """
-    TODO: Define function
+    Number of edges in node’s egonet;
     """
-    return 0
+    vertices = get_egonet(node, graph)
+    sub_g = graph.induced_subgraph(vertices)
+    return len(list(sub_g.es()))
 
 def get_eoegoi(node, graph):
     """
-    TODO: Define function
+    Number of outgoing edges from node's egonet
     """
-    return 0
+    sub_g_inv = graph.copy() #clone the graph
+    sub_g_inv.delete_vertices(get_egonet(node, graph)) #delete egonet
+    return len(list(graph.es())) \
+            - len(list(sub_g_inv.es())) \
+            - get_eegoi(node, graph)
 
 def get_negoi(node, graph):
     """
     TODO: Define function
+    Number of neighbors of node's egonet
     """
     return 0
 
