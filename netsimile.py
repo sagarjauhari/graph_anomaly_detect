@@ -11,7 +11,7 @@ from os.path import isfile, join
 from igraph import *
 import scipy.spatial.distance
 import matplotlib.pyplot as plt
-from utils import *
+from util import *
 
 # import local config: Set your local paths in dev_settings.py
 DATA_URL=""
@@ -166,6 +166,9 @@ def compare(sigs):
     dists = [canberra_dist(sigs[ordered_graphs[i]],
                             sigs[ordered_graphs[i-1]])\
                             for i in range(1,len(ordered_graphs))]
+    
+    # Save dists to file
+    saveDists(ordered_graphs, dists, sys.argv[1]+"_dists.csv")    
     
     # Plot the (N-1) canberra distances comparing each graph with the 
     # previous one
