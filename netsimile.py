@@ -94,7 +94,8 @@ def get_negoi(node, graph):
 #==============================================================================
 # NetSimile Algorithm components
 #==============================================================================
-def get_features(g):
+def get_features(g, name):
+    print "Generating features: %s" % name 
     return [(get_di(i,g), 
              get_ci(i,g), 
              get_dni(i,g),
@@ -104,7 +105,9 @@ def get_features(g):
              get_negoi(i,g)) for i in g.vs]
 
 def get_features_all(graphs):
-    return {g: get_features(graphs[g]) for g in graphs}
+    # Order all the graphs names based on the timestamp
+    ordered_names = sorted(graphs.keys(), key=lambda k:int(k.split('_',1)[0]))
+    return {g: get_features(graphs[g], g) for g in ordered_names}
 
 def get_moments(feat):
     """
@@ -125,6 +128,7 @@ def get_moments(feat):
     return signature
 
 def aggregator(features_all):
+    print "Aggregating features"
     return {g: get_moments(features_all[g]) for g in features_all}
 
 def canberra_dist(sig1, sig2):
@@ -174,7 +178,7 @@ def compare(sigs):
 
 def file2igraph(file):
     """
-    Coverts graph file into iGraph object, adds artifacts
+    Converts graph file into iGraph object, adds artifacts
     """
     with open(file, 'r') as fi:
         v,e = fi.next().split()
