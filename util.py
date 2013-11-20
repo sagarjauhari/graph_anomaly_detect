@@ -6,6 +6,7 @@ Created on Wed Nov 20 14:42:34 2013
 """
 import csv
 from igraph import *
+from os.path import join
 
 #==============================================================================
 # Utility functions
@@ -28,8 +29,7 @@ def saveDists(graph_names, dists, file_name):
     assert (len(graph_names) - len(dists) == 1),\
                 "len(graph_names) - len(dists) != 1"
     data = zip(graph_names[1:],dists)
-    print data
-    with open(file_name, 'w') as fo:
+    with open(join("out",file_name), 'w') as fo:
         fr = csv.writer(fo)
         fr.writerows(data)
         
