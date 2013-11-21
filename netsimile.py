@@ -3,6 +3,7 @@
 Created on Thu Nov 14 13:53:46 2013
 @author: Sagar Jauhari
 """
+import time
 import numpy as np
 import scipy as sp
 import matplotlib as mpl
@@ -23,7 +24,7 @@ DATA_URL=""
 SAVE_URL=""
 try:
     from dev_settings import *
-except:
+except ImportError:
     pass
 
 
