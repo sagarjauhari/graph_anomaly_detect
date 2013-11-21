@@ -71,9 +71,19 @@ def get_eegoi(node, graph):
     """
     Number of edges in node’s egonet;
     """
+    edges_to=[]
     vertices = get_egonet(node, graph)
-    sub_g = graph.induced_subgraph(vertices)
-    return len(list(sub_g.es()))
+   
+    for n in vertices:
+        for i in get_egonet(n, graph):
+            if i!=n:
+                edges_to.append(i)
+    
+    #remove external nodes
+    edges2x=[i for i in edges_to if i in vertices]
+    assert (len(edges2x)%2==0),"Wrong calculation"
+    return len(edges2x)/2
+
 
 def get_eoegoi(node, graph):
     """
