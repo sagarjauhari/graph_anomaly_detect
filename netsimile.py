@@ -79,13 +79,14 @@ def get_eoegoi(node, graph):
     """
     Number of outgoing edges from node's egonet
     """
-    #clone the graph and delete egonet subgraph
-    sub_g_inv = graph.copy()
-    sub_g_inv.delete_vertices(get_egonet(node, graph))
+    edges_to=[]
+    vertices=get_egonet(node, graph)
     
-    return len(list(graph.es())) \
-            - len(list(sub_g_inv.es())) \
-            - get_eegoi(node, graph)
+    for n in vertices:
+        for i in get_egonet(n, graph):
+            edges_to.append(i)
+    
+    return len([i for i in edges_to if i not in vertices])
 
 def get_negoi(node, graph):
     """
