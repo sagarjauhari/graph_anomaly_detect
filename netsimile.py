@@ -3,6 +3,11 @@
 Created on Thu Nov 14 13:53:46 2013
 @author: Sagar Jauhari
 """
+import numpy as np
+import scipy as sp
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from pylab import *
 
 import scipy.stats as st
 import sys
