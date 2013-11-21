@@ -40,3 +40,6 @@ nosetests.xml
 
 # Sagar
 *dev_settings.py
+
+# Profiler files
+*.profile

@@ -190,6 +190,8 @@ def compare(sigs):
 # NetSimile algorithm
 #==============================================================================
 def NetSimile(graph_files, dir_path):
+    start_time = time.time() #profiling
+    
     #dict of graphs
     graphs = {f: file2igraph(join(dir_path, f)) for f in graph_files}
 
@@ -201,6 +203,8 @@ def NetSimile(graph_files, dir_path):
     signatures = aggregator(features_all)
     
     compare(signatures)
+    
+    print time.time() - start_time, "seconds"
     return
 
 #==============================================================================
