@@ -12,3 +12,13 @@ The path mentioned in 'DATA_URL' should contain all the unzipped data in 4 folde
 <pre>
 as-733  enron  p2p-Gnutella  reality_mining_voices
 </pre>
+
+### Generated Plots
+####AS-733
+![Plot](https://raw.github.com/sagarjauhari/graph_anomaly_detect/master/png/as-733_canberra.png)
+####Enron
+![Plot](https://raw.github.com/sagarjauhari/graph_anomaly_detect/master/png/enron_canberra.png)
+####p2p-Gnutella
+![Plot](https://raw.github.com/sagarjauhari/graph_anomaly_detect/master/png/p2p-Gnutella_canberra.png)
+####Reality Mining Voices
+![Plot](https://raw.github.com/sagarjauhari/graph_anomaly_detect/master/png/reality_mining_voices_canberra.png)
