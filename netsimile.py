@@ -177,6 +177,7 @@ def compare(sigs):
         assert (len(sigs[g])==7*5),"Total features != 7*5"
     
     # Calculate Canberra distance threshold
+
     
     # Order all the graphs names based on the timestamp
     ordered_graphs = sorted(sigs.keys(), key=lambda k:int(k.split('_',1)[0]))
@@ -190,8 +191,12 @@ def compare(sigs):
     # Plot the (N-1) canberra distances comparing each graph with the 
     # previous one
     fig, ax = plt.subplots()
-    ax.plot(dists)
+    ax.plot(dists, "-o")
     plt.grid(True)
+    plt.title("Canberra Distances: "+sys.argv[1])
+    plt.xlabel("Time Series Graphs")
+    plt.ylabel("Canberra Distance")
+    fig.savefig(join('png', sys.argv[1]+"_canberra.png"),bbox_inches='tight')
         
     anomalies = []
     # Starting with the 2nd graph, compute the canberra distance of each
