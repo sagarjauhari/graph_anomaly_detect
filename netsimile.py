@@ -9,7 +9,6 @@ import scipy as sp
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from pylab import *
-
 import scipy.stats as st
 import sys
 from os import listdir
@@ -18,6 +17,8 @@ from igraph import *
 import scipy.spatial.distance
 import matplotlib.pyplot as plt
 from util import *
+
+is_debug = True
 
 # import local config: Set your local paths in dev_settings.py
 DATA_URL=""
@@ -124,6 +125,10 @@ def get_features(g, name):
              get_negoi(i,g)) for i in g.vs]
 
 def get_features_all(graphs):
+    """
+    Returns all features of all graphs. 
+    Out Format: {g1:[(f1..f7),(f1..f7),(f1..f7)...#nodes], g2:...}
+    """
     # Order all the graphs names based on the timestamp
     ordered_names = sorted(graphs.keys(), key=lambda k:int(k.split('_',1)[0]))
     return {g: get_features(graphs[g], g) for g in ordered_names}
@@ -156,10 +161,12 @@ def canberra_dist(sig1, sig2):
     sig1 and sig2.
     """
     return scipy.spatial.distance.canberra(sig1, sig2)
+    
+def dist_threshold(dists):
+    return dists[len(dists)/2] + 2*std(dists)
 
-def compare(sigs):
+def compare(sigs, use_old_dists):
     """
-    TODO: Define function
     To detect anomalies, compute the Canberra distance between consecutive time
     points (i.e.,between graphs G t and G t+1 ). You should calculate the 
     threshold value for the Canberra distance as explained in the project 
@@ -172,27 +179,34 @@ def compare(sigs):
     output: Time series comparison of each graph on the basis of signatures
     """
     
-    # Verify dimensions
-    for g in sigs:
-        assert (len(sigs[g])==7*5),"Total features != 7*5"
-    
+    if not use_old_dists:
+        # Verify dimensions
+        for g in sigs:
+            assert (len(sigs[g])==7*5),"Total features != 7*5"
+        
+        # Order all the graphs names based on the timestamp
+        ordered_graphs = sorted(sigs.keys(),
+                                key=lambda k:int(k.split('_',1)[0]))
+        
+        dists = [canberra_dist(sigs[ordered_graphs[i]],
+              sigs[ordered_graphs[i-1]]) for i in range(1,len(ordered_graphs))]
+        
+        # Save dists to file
+        saveDists(ordered_graphs, dists, sys.argv[1]+"_dists.csv") 
+    else:
+        dists = loadDists(sys.argv[1])
+        
     # Calculate Canberra distance threshold
-
-    
-    # Order all the graphs names based on the timestamp
-    ordered_graphs = sorted(sigs.keys(), key=lambda k:int(k.split('_',1)[0]))
-    dists = [canberra_dist(sigs[ordered_graphs[i]],
-                            sigs[ordered_graphs[i-1]])\
-                            for i in range(1,len(ordered_graphs))]
-    
-    # Save dists to file
-    saveDists(ordered_graphs, dists, sys.argv[1]+"_dists.csv")    
+    up_limit = dist_threshold(dists)
     
     # Plot the (N-1) canberra distances comparing each graph with the 
     # previous one
     fig, ax = plt.subplots()
     ax.plot(dists, "-o")
+    axhline(y=up_limit, ls='-', c='r', label='Threshold: $\mu + 2\sigma$',
+            lw=2)
     plt.grid(True)
+    plt.legend(loc='best')
     plt.title("Canberra Distances: "+sys.argv[1])
     plt.xlabel("Time Series Graphs")
     plt.ylabel("Canberra Distance")
@@ -206,20 +220,18 @@ def compare(sigs):
 #==============================================================================
 # NetSimile algorithm
 #==============================================================================
-def NetSimile(graph_files, dir_path):
-    start_time = time.time() #profiling
+def NetSimile(graph_files, dir_path, use_old_dists=False):
+    """
+    use_old_dists - if True, then use previously computed values of distances
+    """
+    start_time = time.time()
+    signatures=None
+    if not use_old_dists:
+        graphs = {f: file2igraph(join(dir_path, f)) for f in graph_files}
+        features_all = get_features_all(graphs)
+        signatures = aggregator(features_all)
     
-    #dict of graphs
-    graphs = {f: file2igraph(join(dir_path, f)) for f in graph_files}
-
-    # Get features of all nodes in all graphs
-    # Format: {g1:[(f1..f7),(f1..f7),(f1..f7)...#nodes], g2:...}
-    features_all = get_features_all(graphs)
-    
-    #signature of all graphs
-    signatures = aggregator(features_all)
-    
-    compare(signatures)
+    compare(signatures, use_old_dists)
     
     print time.time() - start_time, "seconds"
     return
@@ -233,4 +245,4 @@ if __name__=="__main__":
     dir_path = join(DATA_URL, sys.argv[1])
     onlyfiles = [f for f in listdir(dir_path) if \
                             isfile(join(dir_path,f)) ]
-    NetSimile(onlyfiles, dir_path)
+    NetSimile(onlyfiles, dir_path, use_old_dists=is_debug)
