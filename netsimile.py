@@ -178,6 +178,9 @@ def plot_and_save(dists, up_limit):
     plt.xlabel("Time Series Graphs")
     plt.ylabel("Canberra Distance")
     savefig(join('png', sys.argv[1]+"_canberra.png"),bbox_inches='tight')
+    
+def get_anomalies(dists, up_limit):
+    pass
 
 def compare(sigs, use_old_dists):
     """
