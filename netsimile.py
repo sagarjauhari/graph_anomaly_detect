@@ -164,6 +164,20 @@ def canberra_dist(sig1, sig2):
     
 def dist_threshold(dists):
     return dists[len(dists)/2] + 2*std(dists)
+    
+def plot_and_save(dists, up_limit):
+    """
+    Plot the (N-1) canberra distances comparing each graph with the previous
+    """
+    figure(num=None, figsize=(12, 6), dpi=80, facecolor='w', edgecolor='k')
+    plt.plot(dists, "-o")
+    axhline(y=up_limit, ls='-', c='r', label='Threshold: $\mu + 2\sigma$',lw=2)
+    plt.grid(True)
+    plt.legend(loc='best')
+    plt.title("Anomaly Detection: "+sys.argv[1])
+    plt.xlabel("Time Series Graphs")
+    plt.ylabel("Canberra Distance")
+    savefig(join('png', sys.argv[1]+"_canberra.png"),bbox_inches='tight')
 
 def compare(sigs, use_old_dists):
     """
@@ -180,37 +194,24 @@ def compare(sigs, use_old_dists):
     """
     
     if not use_old_dists:
-        # Verify dimensions
+        # Verify dimensions, Order all the graphs names based on the timestamp,
+        # and Save dists to file
         for g in sigs:
             assert (len(sigs[g])==7*5),"Total features != 7*5"
         
-        # Order all the graphs names based on the timestamp
         ordered_graphs = sorted(sigs.keys(),
                                 key=lambda k:int(k.split('_',1)[0]))
         
         dists = [canberra_dist(sigs[ordered_graphs[i]],
               sigs[ordered_graphs[i-1]]) for i in range(1,len(ordered_graphs))]
         
-        # Save dists to file
         saveDists(ordered_graphs, dists, sys.argv[1]+"_dists.csv") 
     else:
         dists = loadDists(sys.argv[1])
         
     # Calculate Canberra distance threshold
     up_limit = dist_threshold(dists)
-    
-    # Plot the (N-1) canberra distances comparing each graph with the 
-    # previous one
-    fig, ax = plt.subplots()
-    ax.plot(dists, "-o")
-    axhline(y=up_limit, ls='-', c='r', label='Threshold: $\mu + 2\sigma$',
-            lw=2)
-    plt.grid(True)
-    plt.legend(loc='best')
-    plt.title("Canberra Distances: "+sys.argv[1])
-    plt.xlabel("Time Series Graphs")
-    plt.ylabel("Canberra Distance")
-    fig.savefig(join('png', sys.argv[1]+"_canberra.png"),bbox_inches='tight')
+    plot_and_save(dists, up_limit)
         
     anomalies = []
     # Starting with the 2nd graph, compute the canberra distance of each
