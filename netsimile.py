@@ -160,7 +160,7 @@ def canberra_dist(sig1, sig2):
     Returns the Canberra distance between graphs described by the signatures
     sig1 and sig2.
     """
-    return scipy.spatial.distance.canberra(sig1, sig2)
+    return abs(scipy.spatial.distance.canberra(sig1, sig2))
 
 def dist_threshold(dists):
     """
@@ -183,12 +183,18 @@ def plot_and_save(dists, up_limit):
     savefig(join('png', sys.argv[1]+"_canberra.png"),bbox_inches='tight')
 
 def get_anomalies(dists, up_limit):
+    """
+    Starting with the 2nd graph, compute the canberra distance of each
+    graph with the previous and next. Compare with threshold value. Append
+    the anomalous grpahs to list anomalies[].
+
+    Dist[i] is distance of graph with previous graph
+    Dist[i+1] is distance of next graph with this grpah
+    """
     anomalies = []
     for i in range(1, len(dists)-1):
-        if abs(dists[i]-dists[i-1]) >= up_limit and \
-        abs(dists[i]-dists[i+1]) >= up_limit:
+        if dists[i] >= up_limit and dists[i+1] >= up_limit:
             anomalies.append(i)
-
     return anomalies
 
 def compare(sigs, use_old_dists):
@@ -225,11 +231,11 @@ def compare(sigs, use_old_dists):
     up_limit = dist_threshold(dists)
 
     anomalies = get_anomalies(dists, up_limit)
+    if is_debug: print anomalies
     plot_and_save(dists, up_limit)
+    #saveAnomalies(up_limit, 'NaN', dists, anomalies)
 
-    # Starting with the 2nd graph, compute the canberra distance of each
-    # graph with the previous one. Compare with threshold value. Append
-    # the anomalous grpahs to list anomalies[]
+
 
 #==============================================================================
 # NetSimile algorithm
