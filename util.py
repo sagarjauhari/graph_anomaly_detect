@@ -24,7 +24,7 @@ def file2igraph(file):
         g.add_vertices(int(v))
         g.add_edges(e_list)
         return g
-        
+
 def saveDists(graph_names, dists, file_name):
     assert (len(graph_names) - len(dists) == 1),\
                 "len(graph_names) - len(dists) != 1"
@@ -41,6 +41,9 @@ def loadDists(name):
 
 def saveAnomalies(lim_up, lim_down, dists, anomalies):
     """
-    Writes to disk the anomalies in the defined format. 
+    Writes to disk the anomalies in the defined format.
     """
-    pass
+    with open(join('out',sys.argv[1]+'_anomalies.txt'), 'w') as fo:
+        fo.write(str(lim_up)+' '+str(lim_down)+'\n')
+        for a in anomalies:
+            fo.write(str(a)+' '+str(dists[a-1]) +' ' + str(dists[a])+'\n')

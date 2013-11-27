@@ -233,7 +233,7 @@ def compare(sigs, use_old_dists):
     anomalies = get_anomalies(dists, up_limit)
     if is_debug: print anomalies
     plot_and_save(dists, up_limit)
-    #saveAnomalies(up_limit, 'NaN', dists, anomalies)
+    saveAnomalies(up_limit, 'NaN', dists, anomalies)
 
 
 
