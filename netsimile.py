@@ -74,12 +74,12 @@ def get_eegoi(node, graph):
     """
     edges_to=[]
     vertices = get_egonet(node, graph)
-   
+
     for n in vertices:
         for i in get_egonet(n, graph):
             if i!=n:
                 edges_to.append(i)
-    
+
     #remove external nodes
     edges2x=[i for i in edges_to if i in vertices]
     assert (len(edges2x)%2==0),"Wrong calculation"
@@ -92,11 +92,11 @@ def get_eoegoi(node, graph):
     """
     edges_to=[]
     vertices=get_egonet(node, graph)
-    
+
     for n in vertices:
         for i in get_egonet(n, graph):
             edges_to.append(i)
-    
+
     return len([i for i in edges_to if i not in vertices])
 
 def get_negoi(node, graph):
@@ -115,9 +115,9 @@ def get_negoi(node, graph):
 # NetSimile Algorithm components
 #==============================================================================
 def get_features(g, name):
-    print "Extracting features: %s" % name 
-    return [(get_di(i,g), 
-             get_ci(i,g), 
+    print "Extracting features: %s" % name
+    return [(get_di(i,g),
+             get_ci(i,g),
              get_dni(i,g),
              get_cni(i,g),
              get_eegoi(i,g),
@@ -126,7 +126,7 @@ def get_features(g, name):
 
 def get_features_all(graphs):
     """
-    Returns all features of all graphs. 
+    Returns all features of all graphs.
     Out Format: {g1:[(f1..f7),(f1..f7),(f1..f7)...#nodes], g2:...}
     """
     # Order all the graphs names based on the timestamp
@@ -140,7 +140,7 @@ def get_moments(feat):
     """
     feat_cols = zip(*feat)
     assert (len(feat_cols)==7),"Total columns != 7"
-    
+
     # Calculate the 5 aggregates for each feature
     signature = []
     for f in feat_cols:
@@ -161,11 +161,14 @@ def canberra_dist(sig1, sig2):
     sig1 and sig2.
     """
     return scipy.spatial.distance.canberra(sig1, sig2)
-    
+
 def dist_threshold(dists):
+    """
+    Median + 2*(std dev)
+    """
     return dists[len(dists)/2] + 2*std(dists)
-    
-def plot_and_save(dists, up_limit):
+
+def plot_and_save(dists, up_limit, anomalies):
     """
     Plot the (N-1) canberra distances comparing each graph with the previous
     """
@@ -178,49 +181,56 @@ def plot_and_save(dists, up_limit):
     plt.xlabel("Time Series Graphs")
     plt.ylabel("Canberra Distance")
     savefig(join('png', sys.argv[1]+"_canberra.png"),bbox_inches='tight')
-    
+
 def get_anomalies(dists, up_limit):
-    pass
+    anomalies = []
+    for i in range(1, len(dists)-1):
+        if abs(dists[i]-dists[i-1]) >= up_limit and \
+        abs(dists[i]-dists[i+1]) >= up_limit:
+            anomalies.append(i)
+
+    return anomalies
 
 def compare(sigs, use_old_dists):
     """
     To detect anomalies, compute the Canberra distance between consecutive time
-    points (i.e.,between graphs G t and G t+1 ). You should calculate the 
-    threshold value for the Canberra distance as explained in the project 
-    description. Use the upper threshold to identify anomalies (i.e., two 
-    consecutive time points above the threshold). For example, if both d(G1 , 
-    G 2 ) and d(G 2 , G 3 ) are found to be above the threshold, then graph G2 
-    is an anomalous graph, since it is different to the preceding and 
+    points (i.e.,between graphs G t and G t+1 ). You should calculate the
+    threshold value for the Canberra distance as explained in the project
+    description. Use the upper threshold to identify anomalies (i.e., two
+    consecutive time points above the threshold). For example, if both d(G1 ,
+    G 2 ) and d(G 2 , G 3 ) are found to be above the threshold, then graph G2
+    is an anomalous graph, since it is different to the preceding and
     succeeding graphs.
     input: 7x5 signature matrices for each graph
     output: Time series comparison of each graph on the basis of signatures
     """
-    
+
     if not use_old_dists:
         # Verify dimensions, Order all the graphs names based on the timestamp,
         # and Save dists to file
         for g in sigs:
             assert (len(sigs[g])==7*5),"Total features != 7*5"
-        
+
         ordered_graphs = sorted(sigs.keys(),
                                 key=lambda k:int(k.split('_',1)[0]))
-        
+
         dists = [canberra_dist(sigs[ordered_graphs[i]],
               sigs[ordered_graphs[i-1]]) for i in range(1,len(ordered_graphs))]
-        
-        saveDists(ordered_graphs, dists, sys.argv[1]+"_dists.csv") 
+
+        saveDists(ordered_graphs, dists, sys.argv[1]+"_dists.csv")
     else:
         dists = loadDists(sys.argv[1])
-        
+
     # Calculate Canberra distance threshold
     up_limit = dist_threshold(dists)
-    plot_and_save(dists, up_limit)
-        
-    anomalies = []
+
+    anomalies = get_anomalies(dists, up_limit)
+    plot_and_save(dists, up_limit, anomalies)
+
     # Starting with the 2nd graph, compute the canberra distance of each
     # graph with the previous one. Compare with threshold value. Append
     # the anomalous grpahs to list anomalies[]
-        
+
 #==============================================================================
 # NetSimile algorithm
 #==============================================================================
@@ -234,9 +244,9 @@ def NetSimile(graph_files, dir_path, use_old_dists=False):
         graphs = {f: file2igraph(join(dir_path, f)) for f in graph_files}
         features_all = get_features_all(graphs)
         signatures = aggregator(features_all)
-    
+
     compare(signatures, use_old_dists)
-    
+
     print time.time() - start_time, "seconds"
     return
 
