@@ -168,7 +168,7 @@ def dist_threshold(dists):
     """
     return dists[len(dists)/2] + 2*std(dists)
 
-def plot_and_save(dists, up_limit, anomalies):
+def plot_and_save(dists, up_limit):
     """
     Plot the (N-1) canberra distances comparing each graph with the previous
     """
@@ -225,7 +225,7 @@ def compare(sigs, use_old_dists):
     up_limit = dist_threshold(dists)
 
     anomalies = get_anomalies(dists, up_limit)
-    plot_and_save(dists, up_limit, anomalies)
+    plot_and_save(dists, up_limit)
 
     # Starting with the 2nd graph, compute the canberra distance of each
     # graph with the previous one. Compare with threshold value. Append
