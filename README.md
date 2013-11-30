@@ -22,7 +22,7 @@ as-733  enron  p2p-Gnutella  reality_mining_voices
 ####p2p-Gnutella
 ![Plot](https://raw.github.com/sagarjauhari/graph_anomaly_detect/master/png/p2p-Gnutella_canberra.png)
 ####Reality Mining Voices
-![Plot]
+![Plot](https://raw.github.com/sagarjauhari/graph_anomaly_detect/master/png/reality_mining_voices_canberra.png)
 
 ### References
 [1] Berlingerio, Michele, et al. "NetSimile: a scalable approach to size-independent network similarity." arXiv preprint arXiv:1209.2684 (2012).
