@@ -18,7 +18,7 @@ import scipy.spatial.distance
 import matplotlib.pyplot as plt
 from util import *
 
-is_debug = True
+is_debug = False
 
 # import local config: Set your local paths in dev_settings.py
 DATA_URL=""
