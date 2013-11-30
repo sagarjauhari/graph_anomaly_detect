@@ -15,7 +15,8 @@ as-733  enron  p2p-Gnutella  reality_mining_voices
 
 ### Generated Plots
 ####AS-733
-![Plot](https://github.com/sagarjauhari/graph_anomaly_detect/blob/master/png/as-733_canberra.png)
+![Plot](https://raw.github.com/sagarjauhari/graph_anomaly_detect/master/png/as-733_canberra.png)
+
 ####Enron
 ![Plot](https://raw.github.com/sagarjauhari/graph_anomaly_detect/master/png/enron_canberra.png)
 ####p2p-Gnutella
