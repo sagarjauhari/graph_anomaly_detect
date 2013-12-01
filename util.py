@@ -46,4 +46,4 @@ def saveAnomalies(lim_up, lim_down, dists, anomalies):
     with open(join('out',sys.argv[1]+'_anomalies.txt'), 'w') as fo:
         fo.write(str(lim_up)+' '+str(lim_down)+'\n')
         for a in anomalies:
-            fo.write(str(a)+' '+str(dists[a]) +' ' + str(dists[a+1])+'\n')
+            fo.write(str(a+1)+' '+str(dists[a]) +' ' + str(dists[a+1])+'\n')

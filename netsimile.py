@@ -52,7 +52,7 @@ def get_ci(node, graph):
     Clustering coefficient of node, defined as the number of triangles
     connected to node over the number of connected triples centered on node
     """
-    return graph.transitivity_local_undirected(node, mode="zero")
+    return graph.transitivity_local_undirected(node, mode=TRANSITIVITY_ZERO)
 
 def get_dni(node, graph):
     """
@@ -194,7 +194,7 @@ def get_anomalies(dists, up_limit):
     Dist[i+1] is distance of next graph with this grpah
     """
     anomalies = []
-    for i in range(1, len(dists)-1):
+    for i in xrange(0, len(dists)-1):
         if dists[i] >= up_limit and dists[i+1] >= up_limit:
             anomalies.append(i)
     return anomalies
