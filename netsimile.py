@@ -175,7 +175,7 @@ def plot_and_save(dists, up_limit):
     figure(num=None, figsize=(12, 6), dpi=80, facecolor='w', edgecolor='k')
     plt.plot(dists, "-o")
     axhline(y=up_limit, ls='-', c='r',
-            label='Threshold: $\mu + 2\sigma = %0.2f$'%(up_limit),
+            label='Threshold: $median + 2\sigma = %0.2f$'%(up_limit),
             lw=2)
     plt.grid(True)
     plt.legend(loc='best')
