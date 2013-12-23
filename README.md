@@ -1,5 +1,5 @@
 ##Anomaly detection in time evolving graphs
-Finding anomalies in graphs using NetSimile[1] algorithm
+Finding anomalies in graphs using [NetSimile](https://github.com/sagarjauhari/graph_anomaly_detect/blob/master/netsimile.py#L245)[1] algorithm
 
 ### Local Configuration
 After cloning the repo on your local machine, add a file named 'dev_settings.py' in your repo which has the following contents:
